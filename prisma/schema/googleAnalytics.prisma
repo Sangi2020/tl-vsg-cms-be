@@ -1,0 +1,10 @@
+model GoogleAnalytics {
+  id         String   @id @default(uuid())
+  trackingId String
+  propertyId String
+  viewId     String?
+  apiKey     String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
