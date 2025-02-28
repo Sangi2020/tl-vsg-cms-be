@@ -13,7 +13,6 @@ import { createNotification } from "../helpers/createNotification.js";
 
 export const subscribeToNewsletter = async (req, res) => {
     const { email } = req.body;
-
     // Validate email
     if (!email) {
         return res.status(400).json({
