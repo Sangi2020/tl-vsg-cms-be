@@ -11,6 +11,8 @@ import newsletterRoutes from "./newsletter.routes.js";
 import socialRoutes from "./social.routes.js";
 import seoRoutes from "./seo.routes.js";
 import documentRoutes from "./document.route.js";
+import companyRoutes from "./company.route.js";
+import serviceRoutes from "./service.routes.js";
 
 
 const router = express.Router();
@@ -26,6 +28,9 @@ router.use("/newsletter", newsletterRoutes);
 router.use('/social', socialRoutes);
 router.use('/seo', seoRoutes)
 router.use('/document', documentRoutes)
+router.use('/company', companyRoutes)
+router.use('/service', serviceRoutes)
+
 
 
 export default router;
