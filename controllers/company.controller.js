@@ -41,7 +41,7 @@ export const addCompanyDetails = async (req, res) => {
 };
 
 export const getCompanyDetails = async (req, res) => {
-  try {
+  try {    
     const settings = await prisma.companySettings.findFirst();
     if (!settings) {
       return res.status(404).json({ message: "Company settings not found" });

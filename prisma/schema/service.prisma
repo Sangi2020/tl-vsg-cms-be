@@ -3,10 +3,10 @@ model Service {
   title              String
   shortDescription   String         @db.Text
   tagline            String         @db.Text
-  taglineDescription String         @db.Text
   image              String
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
+  taglineDescription String         @db.Text
   servicePoints      ServicePoint[]
 
   @@index([createdAt])

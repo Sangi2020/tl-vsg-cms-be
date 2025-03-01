@@ -24,7 +24,7 @@ export const createService = async (req, res) => {
         }
 
         // Validate required fields
-        if (!title || !shortDescription || !tagline || !taglineDescription || !Array.isArray(servicePoints) || servicePoints.length === 0) {
+        if (!title || !shortDescription || !Array.isArray(servicePoints) || servicePoints.length === 0) {
             return res.status(400).json({
                 success: false,
                 message: "Please provide all required fields. Points must be a non-empty array."
@@ -80,7 +80,7 @@ export const getAllServices = async (req, res) => {
                 servicePoints: true
             },
             orderBy: {
-                createdAt: 'asc'  // Most recent services first
+                createdAt: 'desc'  // Most recent services first
             }
         });
 
@@ -107,7 +107,7 @@ export const getAllServices = async (req, res) => {
 
 export const getServiceById = async (req, res) => {
     const { id } = req.params;
-
+        
     try {
         const service = await prisma.service.findUnique({
             where: { id },
