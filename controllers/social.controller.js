@@ -1,35 +1,44 @@
 import prisma from "../helpers/prisma.js";
 import { v4 as uuidv4 } from 'uuid';
 
-
-
 // Create a new social media entry
-
 export const createSocial = async (req, res) => {
     const { platform, url, isActive } = req.body;
 
-    // Only URL is required now
-    if (!url) {
+    if (!url || !platform) {
         return res.status(400).json({
             success: false,
-            message: "Please provide the required URL field"
+            message: "Platform and URL are required fields"
         });
     }
 
     try {
+        // Check if the platform already exists
+        const existingSocial = await prisma.social.findFirst({
+            where: { platform: platform.toLowerCase() },
+        });
+
+        if (existingSocial) {
+            return res.status(400).json({
+                success: false,
+                message: `A social media entry for ${platform} already exists.`,
+            });
+        }
+
+        // Create a new social media entry
         const social = await prisma.social.create({
             data: {
                 id: uuidv4(),
-                platform: platform || null,
+                platform: platform.toLowerCase(), // Normalize to lowercase
                 url,
-                isActive: isActive !== undefined ? isActive : true
-            }
+                isActive: isActive !== undefined ? isActive : true,
+            },
         });
 
         return res.status(201).json({
             success: true,
             message: "Social media entry created successfully",
-            data: social
+            data: social,
         });
 
     } catch (error) {
@@ -40,6 +49,7 @@ export const createSocial = async (req, res) => {
         });
     }
 };
+
 
 // Get all social media entries
 export const getAllSocials = async (req, res) => {
