@@ -190,11 +190,12 @@ export const deleteSEO = async (req, res) => {
 
 
 
-// ** Get SEO Entries **
+// ** Get SEO Entries Web **
 
 
 export const getSEOWithParams = async (req, res) => {
-  const { pageTitle } = req.query;
+  const { pageTitle } = req.params;
+  console.log(pageTitle,"pagee");
 
   if (!pageTitle) {
     return res.status(400).json({ message: "pageTitle query parameter is required" });

@@ -12,7 +12,7 @@ import qnaRoutes from "./qna.routes.js";
 import newsletterRoutes from "./newsletter.routes.js";
 import socialRoutes from "./social.routes.js";
 import statRoutes from "./stat.routes.js";
-// import emailConfigRoutes from "./emailConfig.routes.js";
+import emailConfigRoutes from "./emailConfig.routes.js";
 import notificationRoutes from "./notification.routes.js";
 import documentRoutes from "./document.routes.js"
 import userRoutes from "./user.routes.js"
@@ -35,7 +35,7 @@ router.use("/qna", qnaRoutes);
 // router.use("/catalogue", catalogueRoutes);
 router.use("/newsletter", newsletterRoutes);
 router.use('/social', socialRoutes);
-// router.use('/config', emailConfigRoutes);
+router.use('/config', emailConfigRoutes);
 router.use('/notification', notificationRoutes);
 router.use('/document', documentRoutes)
 router.use('/users', userRoutes);
