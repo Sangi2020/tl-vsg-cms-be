@@ -58,7 +58,38 @@ export const addTeam = async (req, res) => {
     }
 };
 
+export const getTeamById = async (req, res) => {
+    const { id } = req.params;
+        
+    try {
+        const team = await prisma.team.findUnique({
+            where: { id },
+          
+        });
 
+        if (!team) {
+            return res.status(404).json({
+                success: false,
+                message: "Team not found"
+            });
+        }
+
+       
+
+        return res.status(200).json({
+            success: true,
+            message: "Team fetched successfully",
+            data: team
+        });
+
+    } catch (error) {
+        console.error("Error fetching service:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong while fetching the team"
+        });
+    }
+}
 export const getActiveTeam = async (req, res) => {
 
     try {
