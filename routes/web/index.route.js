@@ -10,6 +10,7 @@ import catalogueRoutes from "./catalogue.routes.js";
 import newsletterRoutes from "./newsletter.routes.js";
 import socialRoutes from "./social.routes.js";
 import seoRoutes from "./seo.routes.js";
+import documentRoutes from "./document.route.js";
 
 
 const router = express.Router();
@@ -24,6 +25,7 @@ router.use("/catalogue", catalogueRoutes);
 router.use("/newsletter", newsletterRoutes);
 router.use('/social', socialRoutes);
 router.use('/seo', seoRoutes)
+router.use('/document', documentRoutes)
 
 
 export default router;

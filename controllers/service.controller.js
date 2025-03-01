@@ -4,7 +4,7 @@ import { deleteImageFromCloudinary, imageUploadToCloudinary } from "../helpers/i
 
 export const createService = async (req, res) => {
     try {
-        let { title, shortDescription, tagline, servicePoints } = req.body;
+        let { title, shortDescription, tagline, servicePoints,taglineDescription } = req.body;
         console.log(req.body, "bodyy");
 
         if (!req.file) {
@@ -24,7 +24,7 @@ export const createService = async (req, res) => {
         }
 
         // Validate required fields
-        if (!title || !shortDescription || !tagline || !Array.isArray(servicePoints) || servicePoints.length === 0) {
+        if (!title || !shortDescription || !tagline || !taglineDescription || !Array.isArray(servicePoints) || servicePoints.length === 0) {
             return res.status(400).json({
                 success: false,
                 message: "Please provide all required fields. Points must be a non-empty array."
@@ -43,6 +43,7 @@ export const createService = async (req, res) => {
                 title,
                 shortDescription,
                 tagline,
+                taglineDescription,
                 image: result.secure_url,
                 servicePoints: {
                     create: servicePoints.map(point => ({
@@ -79,7 +80,7 @@ export const getAllServices = async (req, res) => {
                 servicePoints: true
             },
             orderBy: {
-                createdAt: 'desc'  // Most recent services first
+                createdAt: 'asc'  // Most recent services first
             }
         });
 
@@ -145,7 +146,7 @@ export const getServiceById = async (req, res) => {
 
 export const updateService = async (req, res) => {
     const { id } = req.params;
-    let { title, shortDescription, tagline, servicePoints } = req.body;
+    let { title, shortDescription, tagline, servicePoints,taglineDescription } = req.body;
 
     console.log("Received Request Body:", req.body); // Debugging log
 
@@ -163,8 +164,8 @@ export const updateService = async (req, res) => {
         }
 
         // Validate required fields
-        if (!title || !shortDescription || !tagline || !servicePoints || !Array.isArray(servicePoints)) {
-            console.log("Validation Failed:", { title, shortDescription, tagline, servicePoints });
+        if (!title || !shortDescription || !tagline || !taglineDescription || !servicePoints || !Array.isArray(servicePoints)) {
+            console.log("Validation Failed:", { title, shortDescription, tagline, servicePoints,taglineDescription });
             return res.status(400).json({
                 success: false,
                 message: "Please provide all required fields. servicePoints must be an array."
@@ -190,6 +191,7 @@ export const updateService = async (req, res) => {
                 title, 
                 shortDescription, 
                 tagline, 
+                taglineDescription,
                 updatedAt: new Date() 
             };
 
