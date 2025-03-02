@@ -11,7 +11,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO server with necessary CORS options
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "https://scf-cms-web-orcin.vercel.app","https://scf-cms-web-zeta.vercel.app"], 
+    origin: ["http://localhost:5173","https://tl-vsg-web-omega.vercel.app"], 
     methods: ["GET", "POST"],
   },
 });
