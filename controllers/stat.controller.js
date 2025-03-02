@@ -390,6 +390,21 @@ export const totalBlogs = async (req, res) => {
       });
     }
   };
+export const totalServices = async (req, res) => {
+    try {
+      const totalService = await prisma.service.count();
+      return res.status(200).json({
+        success: true,
+        data: totalService,
+      });
+    } catch (error) {
+      console.error("Error fetching total Service count:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
 
 
 
@@ -438,6 +453,7 @@ export const totalBlogs = async (req, res) => {
           totalClients,
           activeClients,
           totalBlogs,
+          totalServices,
           totalTestimonials,
           totalCatalogues,
           activeCatalogues,
@@ -456,6 +472,8 @@ export const totalBlogs = async (req, res) => {
     
           // Blogs
           prisma.blog.count(),
+          // Services
+          prisma.service.count(),
     
           // Testimonials
           prisma.testimonial.count(),
@@ -500,6 +518,9 @@ export const totalBlogs = async (req, res) => {
             },
             blogs: {
               total: totalBlogs
+            },
+            services: {
+              total: totalServices
             },
             testimonials: {
               total: totalTestimonials
