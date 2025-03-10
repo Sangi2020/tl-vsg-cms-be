@@ -197,12 +197,15 @@ export const newsletterTemplate = (content, unsubscribeUrl, subject) => {
 
             <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
                 <p style="color: #888; font-size: 14px; margin: 0;">Best regards,<br>VsGenx Solutions Team</p>
+                
+                <!-- 
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
                     <p style="color: #888; font-size: 12px; margin: 0;">
                         If you no longer wish to receive our newsletter, 
                         <a href="${unsubscribeUrl}" style="color: #3498db; text-decoration: none; font-weight: bold; cursor: pointer;">click here to unsubscribe</a>
                     </p>
                 </div>
+                -->
             </div>
         </div>
     `;
