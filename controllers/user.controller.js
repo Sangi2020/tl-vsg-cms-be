@@ -8,7 +8,6 @@ const UserType = {
 
 export const createUser = async (req, res) => {
     const { name, email, password, confirmPassword, role } = req.body;
-
     // Ensure all fields are provided
     if (!name || !email || !password || !confirmPassword || !role) {
         return res.status(400).json({ message: "Please provide all the required fields" });

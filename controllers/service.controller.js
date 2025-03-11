@@ -164,7 +164,7 @@ export const updateService = async (req, res) => {
         }
 
         // Validate required fields
-        if (!title || !shortDescription || !tagline || !taglineDescription || !servicePoints || !Array.isArray(servicePoints)) {
+        if (!title || !shortDescription   || !servicePoints || !Array.isArray(servicePoints)) {
             console.log("Validation Failed:", { title, shortDescription, tagline, servicePoints,taglineDescription });
             return res.status(400).json({
                 success: false,
