@@ -390,6 +390,7 @@ export const totalBlogs = async (req, res) => {
       });
     }
   };
+  
 export const totalServices = async (req, res) => {
     try {
       const totalService = await prisma.service.count();
@@ -406,7 +407,36 @@ export const totalServices = async (req, res) => {
     }
   };
 
-
+  export const totalUser = async (req, res) => {
+    try {
+      const totaluser = await prisma.user.count();
+      return res.status(200).json({
+        success: true,
+        data: totaluser,
+      });
+    } catch (error) {
+      console.error("Error fetching total Users count:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
+  export const totalFaq = async (req, res) => {
+    try {
+      const totalfaq = await prisma.fAQ.count();
+      return res.status(200).json({
+        success: true,
+        data: totalfaq,
+      });
+    } catch (error) {
+      console.error("Error fetching total Faq count:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
 
   export const enquiryStats = async (req, res) => {
     try {
@@ -454,6 +484,8 @@ export const totalServices = async (req, res) => {
           activeClients,
           totalBlogs,
           totalServices,
+          totalUser,
+          totalFaq,
           totalTestimonials,
           totalCatalogues,
           activeCatalogues,
@@ -474,7 +506,13 @@ export const totalServices = async (req, res) => {
           prisma.blog.count(),
           // Services
           prisma.service.count(),
-    
+
+          // Faq
+          prisma.fAQ.count(),
+
+          //Users
+          prisma.user.count(),
+          
           // Testimonials
           prisma.testimonial.count(),
     
@@ -521,6 +559,12 @@ export const totalServices = async (req, res) => {
             },
             services: {
               total: totalServices
+            },
+            users: {
+              total: totalUser
+            },
+            faqs: {
+              total: totalFaq
             },
             testimonials: {
               total: totalTestimonials
