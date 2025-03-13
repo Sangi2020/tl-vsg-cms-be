@@ -506,13 +506,10 @@ export const totalServices = async (req, res) => {
           prisma.blog.count(),
           // Services
           prisma.service.count(),
-
-          // Faq
-          prisma.fAQ.count(),
-
           //Users
           prisma.user.count(),
-          
+          // Faq
+          prisma.fAQ.count(),    
           // Testimonials
           prisma.testimonial.count(),
     
