@@ -1,7 +1,6 @@
 import express from "express";
-import { addTeam, getActiveTeam, getTeamById} from "../../controllers/team.controller.js";
-import upload from "../../middlewares/upload.middleware.js";
-import verifyJwtToken from "../../middlewares/verifyJwtToken.js";
+import { getActiveTeam, getTeamById} from "../../controllers/team.controller.js";
+
 
 
 const router = express.Router();

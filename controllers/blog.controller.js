@@ -72,6 +72,36 @@ export const getAllBlogs = async (req, res) => {
     }
 };
 
+export const getBlogById = async (req, res) => {
+    const { id } = req.params;
+        console.log(req.params);
+    try {
+        const blog = await prisma.blog.findUnique({
+            where: { id },
+          
+        });
+
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Blog fetched successfully",
+            data: blog
+        });
+
+    } catch (error) {
+        console.error("Error fetching service:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong while fetching the Blog"
+        });
+    }
+}
+
 export const updateBlog = async (req, res) => {
     const { id } = req.params;
     const new_data = req.body;
