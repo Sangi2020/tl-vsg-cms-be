@@ -20,6 +20,7 @@ import seoRoutes from "./seo.routes.js"
 import settingRoutes from "./settings.routes.js"
 import companySettingRoutes from "./companySetting.routes.js"
 import caseStudyRoute from "./caseStudyRoute.js"
+import careerRoute from "./careerRoute.js"
 
 
 
@@ -45,6 +46,7 @@ router.use("/seo",seoRoutes)
 router.use("/settings",settingRoutes);
 router.use("/company",companySettingRoutes);
 router.use("/casestudy",caseStudyRoute);
+router.use("/career",careerRoute);
 
 
 export default router;
