@@ -14,6 +14,7 @@ import documentRoutes from "./document.route.js";
 import companyRoutes from "./company.route.js";
 import serviceRoutes from "./service.routes.js";
 import caseRoutes from "./caseRoute.js";
+import careerRoutes from "./careerRoute.js";
 
 
 const router = express.Router();
@@ -32,6 +33,7 @@ router.use('/document', documentRoutes)
 router.use('/company', companyRoutes)
 router.use('/service', serviceRoutes)
 router.use('/casestudy', caseRoutes)
+router.use('/career', careerRoutes)
 
 
 
