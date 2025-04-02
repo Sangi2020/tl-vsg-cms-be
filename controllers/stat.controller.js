@@ -390,6 +390,39 @@ export const totalBlogs = async (req, res) => {
       });
     }
   };
+  export const totalCase = async (req, res) => {
+    try {
+      const totalCases = await prisma.caseStudy.count();
+  
+      return res.status(200).json({
+        success: true,
+        data: totalCases,
+      });
+    } catch (error) {
+      console.error("Error fetching total case Study count:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
+  
+  export const totalCareers = async (req, res) => {
+    try {
+      const totalCarrers = await prisma.careers.count();
+  
+      return res.status(200).json({
+        success: true,
+        data: totalCarrers,
+      });
+    } catch (error) {
+      console.error("Error fetching total carrers count:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
   
 export const totalServices = async (req, res) => {
     try {
@@ -483,6 +516,8 @@ export const totalServices = async (req, res) => {
           totalClients,
           activeClients,
           totalBlogs,
+          totalCase,
+          totalCareers,
           totalServices,
           totalUser,
           totalFaq,
@@ -504,6 +539,10 @@ export const totalServices = async (req, res) => {
     
           // Blogs
           prisma.blog.count(),
+          // Casestudy
+          prisma.caseStudy.count(),
+          // careers
+          prisma.careers.count(),
           // Services
           prisma.service.count(),
           //Users
@@ -553,6 +592,12 @@ export const totalServices = async (req, res) => {
             },
             blogs: {
               total: totalBlogs
+            },
+            cases: {
+              total: totalCase
+            },
+            carrers: {
+              total: totalCareers
             },
             services: {
               total: totalServices
