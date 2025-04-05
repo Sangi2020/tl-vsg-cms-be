@@ -33,7 +33,7 @@ export const createCaseStudy = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "Casestudy created successfully",
+            message: "Case Study created successfully",
             data: blog
         });
 
@@ -56,7 +56,7 @@ export const getAllCasestudies = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "Casestudy fetched successfully",
+            message: "Case Study fetched successfully",
             data: caseStudies
         });
 
@@ -80,12 +80,12 @@ export const getcaseId = async (req, res) => {
         if (!cases) {
             return res.status(404).json({
                 success: false,
-                message: "Casestudy not found"
+                message: "Case Study not found"
             });
         }
         return res.status(200).json({
             success: true,
-            message: "Casestudy fetched successfully",
+            message: "Case Study fetched successfully",
             data: cases
         });
 
@@ -119,15 +119,16 @@ export const updateCasestudy = async (req, res) => {
         if (!existingCasestudy) {
             return res.status(404).json({
                 success: false,
-                message: "Casestudy not found"
+                message: "Case Study not found"
             });
         }
+        
         const new_data ={title,subTitle,description,author}
         // If there's a new file uploaded
         if (req.file) {
             // Delete the old image from Cloudinary if it exists
-            if (existingBlog.image) {
-                const publicId = existingBlog.image.split('/').slice(7, -1).join('/') + '/' + existingCasestudy.image.split('/').pop().split('.')[0];
+            if (existingCasestudy.image) {
+                const publicId = existingCasestudy.image.split('/').slice(7, -1).join('/') + '/' + existingCasestudy.image.split('/').pop().split('.')[0];
                 await deleteImageFromCloudinary(publicId);  // Delete the image from Cloudinary
             }
 
@@ -139,7 +140,7 @@ export const updateCasestudy = async (req, res) => {
         }
 
         // Update blog
-        const updatedBlog = await prisma.caseStudy.update({
+        const updatedCaseStudy = await prisma.caseStudy.update({
             where: { id },
             data: {
                 ...new_data,
@@ -149,8 +150,8 @@ export const updateCasestudy = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "Casestudy updated successfully",
-            data: updatedBlog
+            message: "Case Study updated successfully",
+            
         });
 
     } catch (error) {
@@ -186,7 +187,7 @@ export const deleteCaseStudy= async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: "Casestudy deleted successfully"
+            message: "Case Study deleted successfully"
         });
 
     } catch (error) {
