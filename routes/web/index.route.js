@@ -15,6 +15,7 @@ import companyRoutes from "./company.route.js";
 import serviceRoutes from "./service.routes.js";
 import caseRoutes from "./caseRoute.js";
 import careerRoutes from "./careerRoute.js";
+import youtubeVideoRoute from "./youtubeVideo.route.js"
 
 
 const router = express.Router();
@@ -34,6 +35,7 @@ router.use('/company', companyRoutes)
 router.use('/service', serviceRoutes)
 router.use('/casestudy', caseRoutes)
 router.use('/career', careerRoutes)
+router.use("/youtube",youtubeVideoRoute);
 
 
 
