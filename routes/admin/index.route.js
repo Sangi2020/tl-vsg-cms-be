@@ -7,8 +7,6 @@ import enquiriesRoutes from "./enquiries.routes.js";
 import contentsRoutes from "./contents.routes.js";
 import teamRoutes from "./team.routes.js";
 import qnaRoutes from "./qna.routes.js";
-// import clientRoutes from "./client.routes.js";
-// import catalogueRoutes from "./catalogue.routes.js";
 import newsletterRoutes from "./newsletter.routes.js";
 import socialRoutes from "./social.routes.js";
 import statRoutes from "./stat.routes.js";
@@ -21,6 +19,7 @@ import settingRoutes from "./settings.routes.js"
 import companySettingRoutes from "./companySetting.routes.js"
 import caseStudyRoute from "./caseStudyRoute.js"
 import careerRoute from "./careerRoute.js"
+import youtubeVideoRoute from "./youtubeVideo.route.js"
 
 
 
@@ -32,9 +31,7 @@ router.use("/service", serviceRoutes);
 router.use("/team", teamRoutes);
 router.use("/enquiries", enquiriesRoutes);
 router.use("/contents", contentsRoutes);
-// router.use("/client", clientRoutes);
 router.use("/qna", qnaRoutes);
-// router.use("/catalogue", catalogueRoutes);
 router.use("/newsletter", newsletterRoutes);
 router.use('/social', socialRoutes);
 router.use('/config', emailConfigRoutes);
@@ -47,6 +44,7 @@ router.use("/settings",settingRoutes);
 router.use("/company",companySettingRoutes);
 router.use("/casestudy",caseStudyRoute);
 router.use("/career",careerRoute);
+router.use("/youtube",youtubeVideoRoute);
 
 
 export default router;
