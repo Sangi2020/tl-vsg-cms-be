@@ -133,13 +133,38 @@ export const getAllYoutubeVideoCMS = async (req, res) => {
 export const deleteYoutubeVideo = async (req, res) => {
     const { id } = req.params;
     try {
-        await prisma.youTubeVideo.delete({
-          where: { id: id }
+        // First get the video to be deleted to know its order
+        const videoToDelete = await prisma.youTubeVideo.findUnique({
+            where: { id: id }
         });
-        res.status(204).send();
-      } catch (error) {
+        
+        if (!videoToDelete) {
+            return res.status(404).json({ error: 'Video not found' });
+        }
+        
+        // Start a transaction to ensure all operations complete or none do
+        await prisma.$transaction(async (prisma) => {
+            // Delete the video
+            await prisma.youTubeVideo.delete({
+                where: { id: id }
+            });
+            
+            // Decrement the order of all videos that came after the deleted one
+            await prisma.youTubeVideo.updateMany({
+                where: {
+                    order: { gt: videoToDelete.order }
+                },
+                data: {
+                    order: { decrement: 1 }
+                }
+            });
+        });
+        
+        res.status(200).json({ success: true, message: 'Video deleted and orders updated' });
+    } catch (error) {
+        console.error('Error deleting YouTube video:', error);
         res.status(500).json({ error: 'Failed to delete video' });
-      }
+    }
 }
 
 
@@ -163,6 +188,7 @@ export const ReOrderYoutubeVideo = async (req, res) => {
 
         res.status(200).json({ success: true });
     } catch (error) {
+        console.error('Error reordering videos:', error);
         res.status(500).json({ error: 'Failed to reorder videos' });
     }
 }
@@ -171,7 +197,7 @@ export const ReOrderYoutubeVideo = async (req, res) => {
 export const updateYoutubeVideo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { youtubeUrl } = req.body;
+        const { youtubeUrl, newOrder } = req.body;
 
         // Validate input
         if (!youtubeUrl) {
@@ -184,22 +210,33 @@ export const updateYoutubeVideo = async (req, res) => {
             return res.status(400).json({ error: 'Invalid YouTube URL' });
         }
 
-        // Check if video with the same ID already exists
-        const normalizedUrl = `https://www.youtube.com/watch?v=${videoId}`;
-        const existingVideo = await prisma.youTubeVideo.findFirst({
-            where: {
-                youtubeUrl: normalizedUrl
-            }
+        // Get current video
+        const currentVideo = await prisma.youTubeVideo.findUnique({
+            where: { id }
         });
 
-        // If video already exists, return error
-        if (existingVideo) {
-            return res.status(409).json({
-                error: 'This YouTube video is already in your collection',
-                existingVideo
-            });
+        if (!currentVideo) {
+            return res.status(404).json({ error: 'Video not found' });
         }
 
+        // Check if the URL is changing and if it already exists
+        if (currentVideo.youtubeUrl !== `https://www.youtube.com/watch?v=${videoId}`) {
+            const normalizedUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            const existingVideo = await prisma.youTubeVideo.findFirst({
+                where: {
+                    youtubeUrl: normalizedUrl,
+                    id: { not: id }  // Exclude the current video
+                }
+            });
+
+            // If video already exists, return error
+            if (existingVideo) {
+                return res.status(409).json({
+                    error: 'This YouTube video is already in your collection',
+                    existingVideo
+                });
+            }
+        }
 
         // Fetch video metadata from YouTube API
         const API_KEY = process.env.YOUTUBE_API_KEY;
@@ -243,18 +280,25 @@ export const updateYoutubeVideo = async (req, res) => {
             thumbnailUrl = thumbnails.default.url;
         }
 
-        // Update video record in database
-        const updatedVideo = await prisma.youTubeVideo.update({
-            where: { id },
-            data: {
-                title: snippet.title,
-                description: snippet.description,
-                youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
-                thumbnailUrl: thumbnailUrl,
-                views: parseInt(statistics.viewCount, 10) || 0,
-                duration: formattedDuration,
-                publishedAt: new Date(snippet.publishedAt)
-            }
+        // Start a transaction for updating the video and potentially reordering
+        await prisma.$transaction(async (prisma) => {
+            // Update video record in database
+            const updatedVideo = await prisma.youTubeVideo.update({
+                where: { id },
+                data: {
+                    title: snippet.title,
+                    description: snippet.description,
+                    youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
+                    thumbnailUrl: thumbnailUrl,
+                    views: parseInt(statistics.viewCount, 10) || 0,
+                    duration: formattedDuration,
+                    publishedAt: new Date(snippet.publishedAt)
+                }
+            });
+        });
+
+        const updatedVideo = await prisma.youTubeVideo.findUnique({
+            where: { id }
         });
 
         res.json(updatedVideo);
@@ -268,5 +312,86 @@ export const updateYoutubeVideo = async (req, res) => {
         }
 
         res.status(500).json({ error: 'Failed to update YouTube video URL' });
+    }
+}
+
+export const updateVideoOrder = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { newOrder } = req.body;
+        
+        if (isNaN(newOrder) || newOrder < 1) {
+            return res.status(400).json({ error: 'Invalid order value' });
+        }
+        
+        // Get the current video
+        const currentVideo = await prisma.youTubeVideo.findUnique({
+            where: { id }
+        });
+        
+        if (!currentVideo) {
+            return res.status(404).json({ error: 'Video not found' });
+        }
+        
+        const currentOrder = currentVideo.order;
+        
+        // Get total count to validate order
+        const totalVideos = await prisma.youTubeVideo.count();
+        
+        if (newOrder > totalVideos) {
+            return res.status(400).json({ error: `Order cannot be greater than total videos (${totalVideos})` });
+        }
+        
+        // Start a transaction
+        await prisma.$transaction(async (prisma) => {
+            if (newOrder > currentOrder) {
+                // Moving down: decrement videos between current and new position
+                await prisma.youTubeVideo.updateMany({
+                    where: {
+                        order: { 
+                            gt: currentOrder,
+                            lte: newOrder 
+                        }
+                    },
+                    data: {
+                        order: { decrement: 1 }
+                    }
+                });
+            } else if (newOrder < currentOrder) {
+                // Moving up: increment videos between new and current position
+                await prisma.youTubeVideo.updateMany({
+                    where: {
+                        order: { 
+                            gte: newOrder,
+                            lt: currentOrder 
+                        }
+                    },
+                    data: {
+                        order: { increment: 1 }
+                    }
+                });
+            }
+            
+            // Update the target video's order
+            await prisma.youTubeVideo.update({
+                where: { id },
+                data: { order: newOrder }
+            });
+        });
+        
+        // Get updated videos to return in response
+        const updatedVideos = await prisma.youTubeVideo.findMany({
+            orderBy: { order: 'asc' }
+        });
+        
+        res.status(200).json({
+            success: true,
+            message: 'Video order updated successfully',
+            videos: updatedVideos
+        });
+        
+    } catch (error) {
+        console.error('Error updating video order:', error);
+        res.status(500).json({ error: 'Failed to update video order' });
     }
 }

@@ -439,6 +439,21 @@ export const totalServices = async (req, res) => {
       });
     }
   };
+export const totalYoutubeVideos = async (req, res) => {
+    try {
+      const totalYouTubeVideos = await prisma.youTubeVideo.count();
+      return res.status(200).json({
+        success: true,
+        data: totalYouTubeVideos,
+      });
+    } catch (error) {
+      console.error("Error fetching total YouTube count:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
 
   export const totalUser = async (req, res) => {
     try {
@@ -519,6 +534,7 @@ export const totalServices = async (req, res) => {
           totalCase,
           totalCareers,
           totalServices,
+          totalYoutubeVideos,
           totalUser,
           totalFaq,
           totalTestimonials,
@@ -545,6 +561,8 @@ export const totalServices = async (req, res) => {
           prisma.careers.count(),
           // Services
           prisma.service.count(),
+          // Youtube Videos
+          prisma.youTubeVideo.count(),
           //Users
           prisma.user.count(),
           // Faq
@@ -601,6 +619,9 @@ export const totalServices = async (req, res) => {
             },
             services: {
               total: totalServices
+            },
+            youTubeVideo: {
+              total: totalYoutubeVideos
             },
             users: {
               total: totalUser
