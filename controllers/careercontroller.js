@@ -117,7 +117,7 @@ export const updateCareer = async (req, res) => {
                 message: "Career not found"
             });
         }
-        const new_data ={position, positionCount, location, shortdescription,jobType }
+        const new_data ={position, positionCount:Number(positionCount), location, shortdescription,jobType }
       
 
         const updatedCareer = await prisma.careers.update({
