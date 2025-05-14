@@ -53,7 +53,7 @@ export const getAllBlogs = async (req, res) => {
     try {
         const blogs = await prisma.blog.findMany({
             orderBy: {
-                date: 'desc'  // Most recent blogs first
+                date: 'asc'  // Most recent blogs first
             }
         });
 
