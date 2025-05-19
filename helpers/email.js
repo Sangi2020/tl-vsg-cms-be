@@ -168,9 +168,62 @@ export const emailTemplates = {
             </div>
         `;
     },
+     contactFormNotification: (enquiryDetails) => {
+        return `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px; background-color: #f9f9f9;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2 style="color: #333; margin: 0; padding: 20px 0; border-bottom: 2px solid #eee;">New Contact Form Submission</h2>
+                </div>
+                
+                <div style="padding: 20px; color: #555; line-height: 1.5;">
+                    <p style="font-size: 16px;">A new inquiry has been received through your website contact form.</p>
+                    
+                    <div style="background-color: #fff; padding: 20px; border-radius: 5px; margin: 20px 0; border: 1px solid #eee;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 10px 5px; font-weight: bold; width: 100px;">Name:</td>
+                                <td style="padding: 10px 5px;">${enquiryDetails.name}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 5px; font-weight: bold;">Email:</td>
+                                <td style="padding: 10px 5px;">
+                                    <a href="mailto:${enquiryDetails.email}" style="color: #1a73e8; text-decoration: none;">
+                                        ${enquiryDetails.email}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 5px; font-weight: bold;">Phone:</td>
+                                <td style="padding: 10px 5px;">${enquiryDetails.phoneNumber}</td>
+                            </tr>
+                            ${enquiryDetails.subject ? `
+                            <tr>
+                                <td style="padding: 10px 5px; font-weight: bold;">Subject:</td>
+                                <td style="padding: 10px 5px;">${enquiryDetails.subject}</td>
+                            </tr>
+                            ` : ''}
+                        </table>
+                    </div>
+                    
+                    <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                        <p style="margin-top: 0; font-weight: bold;">Message:</p>
+                        <p style="margin-bottom: 0;">${enquiryDetails.message}</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+                    <p style="color: #888; font-size: 12px; margin: 0;">
+                        This is an automated notification from your website contact form.
+                    </p>
+                </div>
+            </div>
+        `;
+    }
 
 
 }
+
+
 
 
 export const testEmailTemplate = () => {
@@ -230,3 +283,4 @@ export const sendNewsletterEmail = async ({ to, subject, content , unsubscribeUr
         throw error;
     }
 };
+

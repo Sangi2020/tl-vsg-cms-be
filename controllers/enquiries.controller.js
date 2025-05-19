@@ -4,13 +4,13 @@ import { createNotification } from "../helpers/createNotification.js";
 import ExcelJS from 'exceljs';
 import PDFDocument from 'pdfkit';
 import { format } from 'date-fns';
-
+import { emailTemplates, sendEmail } from "../helpers/email.js";
 
 
 
 
 export const createContactEnquiry = async (req, res) => {
-  const { name, phoneNumber, email, message: enquiryMessage } = req.body; // Renamed message to enquiryMessage
+  const { name, phoneNumber, email, message: enquiryMessage, subject } = req.body; // Added subject
 
   // Validate required fields
   if (!name || !phoneNumber || !email || !enquiryMessage) {
@@ -28,16 +28,31 @@ export const createContactEnquiry = async (req, res) => {
         name,
         phoneNumber,
         email,
-        message: enquiryMessage
+        message: enquiryMessage,
+        subject // Optional field, may not be in your schema - remove if not needed
       }
     });
 
+    // Create a notification
     const notificationMessage = `You have an enquiry from ${name}`;
     await createNotification({
       subject: 'New Contact Enquiry',
       message: notificationMessage
     });
 
+    // Send email notification
+    await sendEmail({
+      // to: "venkatesan@vsgenxsolutions.com", 
+      to: "vsgenx33@gmail.com", 
+      subject: "New Contact Form Submission",
+      html: emailTemplates.contactFormNotification({
+        name,
+        email,
+        phoneNumber,
+        message: enquiryMessage,
+        subject // Include subject if available
+      })
+    });
    
     return res.status(201).json({
       success: true,
@@ -53,7 +68,6 @@ export const createContactEnquiry = async (req, res) => {
     });
   }
 };
-
 
 //admin
 

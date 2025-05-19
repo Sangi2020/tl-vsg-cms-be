@@ -4,6 +4,7 @@ model Enquiries {
   phoneNumber String
   email       String
   message     String   @db.Text
+  subject     String? 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   status      String   @default("unread")
