@@ -12,7 +12,6 @@ import { emailTemplates, sendEmail } from "../helpers/email.js";
 export const createContactEnquiry = async (req, res) => {
   const { name, phoneNumber, email, message: enquiryMessage, subject } = req.body; // Added subject
 
-  // Validate required fields
   if (!name || !phoneNumber || !email || !enquiryMessage) {
     return res.status(400).json({
       success: false,
@@ -21,7 +20,7 @@ export const createContactEnquiry = async (req, res) => {
   }
 
   try {
-    // Create new contact enquiry
+
     const contact = await prisma.enquiries.create({
       data: {
         id: uuidv4(),
@@ -29,18 +28,18 @@ export const createContactEnquiry = async (req, res) => {
         phoneNumber,
         email,
         message: enquiryMessage,
-        subject // Optional field, may not be in your schema - remove if not needed
+        subject 
       }
     });
 
-    // Create a notification
+
     const notificationMessage = `You have an enquiry from ${name}`;
     await createNotification({
       subject: 'New Contact Enquiry',
       message: notificationMessage
     });
 
-    // Send email notification
+
     await sendEmail({
       // to: "venkatesan@vsgenxsolutions.com", 
       to: "vsgenx33@gmail.com", 
@@ -50,7 +49,7 @@ export const createContactEnquiry = async (req, res) => {
         email,
         phoneNumber,
         message: enquiryMessage,
-        subject // Include subject if available
+        subject 
       })
     });
    
