@@ -10,7 +10,7 @@ import { emailTemplates, sendEmail } from "../helpers/email.js";
 
 
 export const createContactEnquiry = async (req, res) => {
-  const { name, phoneNumber, email, message: enquiryMessage, subject } = req.body; // Added subject
+  const { name, phoneNumber, email, message: enquiryMessage, subject } = req.body;
 
   if (!name || !phoneNumber || !email || !enquiryMessage) {
     return res.status(400).json({
@@ -41,8 +41,7 @@ export const createContactEnquiry = async (req, res) => {
 
 
     await sendEmail({
-      // to: "venkatesan@vsgenxsolutions.com", 
-      to: "vsgenx33@gmail.com", 
+      to: "venkatesan@vsgenxsolutions.com", 
       subject: "New Contact Form Submission",
       html: emailTemplates.contactFormNotification({
         name,
